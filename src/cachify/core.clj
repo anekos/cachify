@@ -15,12 +15,12 @@
 (declare is-fresh? now)
 
 
-(defn- cache-file [cache-name]
-  ((condp #(%1 %2)  cache-name
+(defn- cache-file [func-name]
+  ((condp #(%1 %2)  func-name
      keyword? #(file *cache-dir* (str (name %) ".edn"))
      string? file
      identity)
-   cache-name))
+   func-name))
 
 (defn- call [cache func args]
   (let [value (apply func args)]
@@ -44,8 +44,8 @@
                 (tm/plus updated-at ttl))
     true))
 
-(defn- load-cache [cache-name]
-  (let [f (cache-file cache-name)]
+(defn- load-cache [func-name]
+  (let [f (cache-file func-name)]
     (if (.exists f)
       (with-open [r (input-stream f)]
         (nippy/thaw-from-in! (DataInputStream. r)))
@@ -57,11 +57,11 @@
       value
       (call cache func args))))
 
-(defn- make-cache [cache-name ttl]
-  (let [entries (atom (load-cache cache-name))]
+(defn- make-cache [func-name ttl]
+  (let [entries (atom (load-cache func-name))]
     (swap!  *cache-list* conj {:entries entries
                                :ttl ttl
-                               :name cache-name})
+                               :name func-name})
     entries))
 
 (defn- now []
@@ -78,8 +78,8 @@
   (def cached-plus (cachify :plus plus))
   (cached-plus 1 2) ; print \"1 + 2\" and return 3
   (cached-plus 1 2) ; return 3"
-  [cache-name func & {:keys [ttl] :or {ttl (tm/seconds 60)}}]
-  (let [cache (make-cache cache-name ttl)]
+  [func-name func & {:keys [ttl] :or {ttl (tm/seconds 60)}}]
+  (let [cache (make-cache func-name ttl)]
     (fn [& args]
       (load-or-call cache func args ttl))))
 
