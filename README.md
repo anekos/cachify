@@ -8,7 +8,7 @@ Make your functions cached.
 
 
 ```clj
-[net.snca/cachify "0.0.0"]
+[net.snca/cachify "0.0.1"]
 ```
 
 ## Usage

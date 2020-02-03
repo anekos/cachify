@@ -1,4 +1,4 @@
-(defproject net.snca/cachify "0.0.0"
+(defproject net.snca/cachify "0.0.1"
   :description "Make your functions cached"
   :url "https://github.com/anekos/cachify"
   :license {:name "Eclipse Public License"
