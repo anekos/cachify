@@ -17,7 +17,7 @@
 
 (defn- cache-file [func-name]
   ((condp #(%1 %2)  func-name
-     keyword? #(file *cache-dir* (str (name %) ".edn"))
+     keyword? #(file *cache-dir* (str (name %) ".dat"))
      string? file
      identity)
    func-name))
