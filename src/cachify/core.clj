@@ -110,6 +110,12 @@
    (doseq [cache caches]
      (perm-1 cache))))
 
+(defn perm-on-exit []
+  (.. (Runtime/getRuntime)
+      (addShutdownHook (proxy [Thread] []
+                         (run []
+                           (perm))))))
+
 (defmacro defcachify
   "Define cachified function
 
