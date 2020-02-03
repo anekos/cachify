@@ -19,7 +19,7 @@
   ((condp #(%1 %2)  cache-name
      keyword? #(file *cache-dir* (str (name %) ".edn"))
      string? file
-     constantly)
+     identity)
    cache-name))
 
 (defn- call [cache func args]
