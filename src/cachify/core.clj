@@ -8,16 +8,17 @@
     [taoensso.nippy :as nippy]))
 
 
-(def ^:dynamic *cache-dir* (file (fs/home) ".local/var/cache/cachify"))
 (def ^:dynamic *cache-list* (atom (list)))
 
 
 (declare is-fresh? now)
 
+(defn- cache-dir []
+  (file (fs/home) ".cache" "cachify" (str *ns*)))
 
 (defn- cache-file [func-name]
   ((condp #(%1 %2)  func-name
-     keyword? #(file *cache-dir* (str (name %) ".dat"))
+     keyword? #(file (cache-dir) (str (name %) ".dat"))
      string? file
      identity)
    func-name))
@@ -61,7 +62,8 @@
   (let [entries (atom (load-cache func-name))]
     (swap!  *cache-list* conj {:entries entries
                                :ttl ttl
-                               :name func-name})
+                               :name func-name
+                               :file (cache-file func-name)})
     entries))
 
 (defn- now []
@@ -86,10 +88,9 @@
 (defn perm-1
   "Write a cache to a file"
   [cache]
-  (let [{:keys [entries ttl name]} cache
-        f (cache-file name)]
-    (fs/mkdirs (.getParent f))
-    (with-open [w (output-stream f)]
+  (let [{:keys [entries ttl file]} cache]
+    (fs/mkdirs (.getParent file))
+    (with-open [w (output-stream file)]
       (nippy/freeze-to-out! (DataOutputStream. w)
                             (clean-up @entries ttl)))))
 
