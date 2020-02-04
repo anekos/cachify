@@ -40,10 +40,8 @@
          entries)))
 
 (defn- is-fresh? [updated-at ttl]
-  (if ttl
-    (tm/before? (now)
-                (tm/plus updated-at ttl))
-    true))
+  (tm/before? (now)
+              (tm/plus updated-at ttl)))
 
 (defn- load-cache [func-name]
   (let [f (cache-file func-name)]
