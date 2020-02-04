@@ -3,7 +3,7 @@
   :url "https://github.com/anekos/cachify"
   :license {:name "Eclipse Public License"
             :url  "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[clojure.java-time "0.3.1"]
+  :dependencies [[clojure.java-time "0.3.2"]
                  [com.taoensso/nippy "2.14.0"]
                  [me.raynes/fs "1.4.6"]]
   :plugins [[lein-cloverage "1.0.13"]
@@ -11,7 +11,7 @@
             [lein-ancient "0.6.15"]
             [lein-changelog "0.3.2"]]
   :profiles {:dev
-             {:dependencies [[org.clojure/clojure "1.10.0"]
+             {:dependencies [[org.clojure/clojure "1.10.1"]
                              [org.clojure/tools.namespace "0.3.1"]]
               :source-paths ["src" "dev"]
               :repl-options {:init-ns user}}}
